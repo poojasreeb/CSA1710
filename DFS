@@ -1,0 +1,24 @@
+# Graph represented as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G'],
+    'D': [],
+    'E': [],
+    'F': [],
+    'G': []
+}
+
+def dfs(graph, node, visited):
+    if node not in visited:
+        print(node, end=" ")
+        visited.add(node)
+
+        # Visit all adjacent nodes recursively
+        for neighbor in graph[node]:
+            dfs(graph, neighbor, visited)
+
+# Driver code
+visited = set()
+print("DFS Traversal:")
+dfs(graph, 'A', visited)
