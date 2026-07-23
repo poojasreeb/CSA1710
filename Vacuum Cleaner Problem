@@ -1,0 +1,59 @@
+from collections import deque
+
+def vacuum_cleaner():
+    # State: (vacuum_position, room_A, room_B)
+    # 0 = Dirty, 1 = Clean
+
+    initial_state = ("A", 0, 0)
+    goal_state = (None, 1, 1)
+
+    queue = deque()
+    queue.append((initial_state, []))
+
+    visited = set()
+
+    while queue:
+        state, path = queue.popleft()
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+        path = path + [state]
+
+        position, room_A, room_B = state
+
+        # Goal test
+        if room_A == 1 and room_B == 1:
+            return path
+
+        next_states = []
+
+        # Suck action
+        if position == "A" and room_A == 0:
+            next_states.append(("A", 1, room_B))
+
+        if position == "B" and room_B == 0:
+            next_states.append(("B", room_A, 1))
+
+        # Move Right
+        if position == "A":
+            next_states.append(("B", room_A, room_B))
+
+        # Move Left
+        if position == "B":
+            next_states.append(("A", room_A, room_B))
+
+        for next_state in next_states:
+            if next_state not in visited:
+                queue.append((next_state, path))
+
+    return None
+
+
+solution = vacuum_cleaner()
+
+print("Solution:")
+
+for step, state in enumerate(solution):
+    print("Step", step, ":", state)
