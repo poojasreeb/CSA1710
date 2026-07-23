@@ -1,0 +1,33 @@
+from itertools import permutations
+
+word1 = "SEND"
+word2 = "MORE"
+result = "MONEY"
+
+letters = set(word1 + word2 + result)
+
+for digits in permutations(range(10), len(letters)):
+
+    mapping = dict(zip(letters, digits))
+
+    # First letters cannot be zero
+    if mapping['S'] == 0 or mapping['M'] == 0:
+        continue
+
+    def value(word):
+        number = 0
+        for letter in word:
+            number = number * 10 + mapping[letter]
+        return number
+
+    num1 = value(word1)
+    num2 = value(word2)
+    num_result = value(result)
+
+    if num1 + num2 == num_result:
+        print("Solution:")
+        print("SEND =", num1)
+        print("MORE =", num2)
+        print("MONEY =", num_result)
+        print(mapping)
+        break
