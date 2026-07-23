@@ -1,0 +1,38 @@
+from itertools import permutations
+
+def travelling_salesman(graph, start):
+    cities = list(graph.keys())
+    cities.remove(start)
+
+    shortest_distance = float('inf')
+    best_route = None
+
+    for route in permutations(cities):
+        current_city = start
+        distance = 0
+
+        for next_city in route:
+            distance += graph[current_city][next_city]
+            current_city = next_city
+
+        # Return to starting city
+        distance += graph[current_city][start]
+
+        if distance < shortest_distance:
+            shortest_distance = distance
+            best_route = (start,) + route + (start,)
+
+    return best_route, shortest_distance
+
+
+graph = {
+    'A': {'B': 10, 'C': 15, 'D': 20},
+    'B': {'A': 10, 'C': 35, 'D': 25},
+    'C': {'A': 15, 'B': 35, 'D': 30},
+    'D': {'A': 20, 'B': 25, 'C': 30}
+}
+
+route, distance = travelling_salesman(graph, 'A')
+
+print("Shortest Route:", " -> ".join(route))
+print("Minimum Distance:", distance)
