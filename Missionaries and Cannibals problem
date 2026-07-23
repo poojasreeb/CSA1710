@@ -1,0 +1,85 @@
+from collections import deque
+
+def is_valid(missionaries, cannibals):
+    # Number of people on the opposite side
+    m_right = 3 - missionaries
+    c_right = 3 - cannibals
+
+    # Left side condition
+    if missionaries > 0 and cannibals > missionaries:
+        return False
+
+    # Right side condition
+    if m_right > 0 and c_right > m_right:
+        return False
+
+    return True
+
+
+def missionaries_cannibals():
+    # State: (Missionaries, Cannibals, Boat)
+    # Boat: 0 = Left, 1 = Right
+
+    start = (3, 3, 0)
+    goal = (0, 0, 1)
+
+    queue = deque()
+    queue.append((start, []))
+
+    visited = set()
+
+    # Possible boat combinations
+    moves = [
+        (1, 0),  # 1 Missionary
+        (2, 0),  # 2 Missionaries
+        (0, 1),  # 1 Cannibal
+        (0, 2),  # 2 Cannibals
+        (1, 1)   # 1 Missionary and 1 Cannibal
+    ]
+
+    while queue:
+        state, path = queue.popleft()
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+        path = path + [state]
+
+        if state == goal:
+            return path
+
+        m, c, boat = state
+
+        for dm, dc in moves:
+
+            if boat == 0:  # Boat moves from left to right
+                new_m = m - dm
+                new_c = c - dc
+                new_boat = 1
+
+            else:  # Boat moves from right to left
+                new_m = m + dm
+                new_c = c + dc
+                new_boat = 0
+
+            if 0 <= new_m <= 3 and 0 <= new_c <= 3:
+                if is_valid(new_m, new_c):
+                    new_state = (new_m, new_c, new_boat)
+
+                    if new_state not in visited:
+                        queue.append((new_state, path))
+
+    return None
+
+
+solution = missionaries_cannibals()
+
+print("Solution:")
+
+for step, state in enumerate(solution):
+    m, c, boat = state
+
+    side = "Left" if boat == 0 else "Right"
+
+    print("Step", step, ":", state, "Boat =", side)
